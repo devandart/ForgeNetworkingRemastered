@@ -452,6 +452,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 			if (_classOrderList == null)
 			{
 				_classOrderList = new ReorderableList(ClassVariables, typeof(ForgeEditorField), true, true, true, true);
+                _classOrderList.elementHeight = EditorGUIUtility.singleLineHeight * 5;
 				_classOrderList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
 				{
 					ClassVariables[index].Render(rect, isActive, isFocused);

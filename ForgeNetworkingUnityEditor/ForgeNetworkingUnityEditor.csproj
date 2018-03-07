@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\Unity Projects\ForgeNetworkingDev\Assets\Bearded Man Studios Inc\Editor\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,6 +51,7 @@
     <Compile Include="ForgeClassObject.cs" />
     <Compile Include="ForgeClassRewindValue.cs" />
     <Compile Include="ForgeClassRPCValue.cs" />
+    <Compile Include="ForgeCompressionSettings.cs" />
     <Compile Include="ForgeEditorButton.cs" />
     <Compile Include="ForgeEditorField.cs" />
     <Compile Include="ForgeEditorRPCField.cs" />

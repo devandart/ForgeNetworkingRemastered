@@ -63,16 +63,6 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 					//InterpolateValue = ForgeNetworkingEditor.DEFAULT_INTERPOLATE_TIME;
 				}
 			}
-
-            if (ForgeClassFieldValue.IsCompressable(FieldType))
-            {
-                compress = GUILayout.Toggle(compress, "compress", GUILayout.Width(125));
-
-                if (compress)
-                {
-
-                }
-            }
 		}
 
 		public void Render(Rect rect, bool isActive, bool isFocused)
@@ -81,7 +71,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 				return;
 
 			rect.y += 2;
-
+            
 			Rect changingRect = new Rect(rect.x, rect.y, rect.width * 0.3f, EditorGUIUtility.singleLineHeight);
 			FieldName = EditorGUI.TextField(changingRect, FieldName);
 			changingRect.x += rect.width * 0.3f + 5;
@@ -105,7 +95,21 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 				}
 				else
 					InterpolateValue = 0;
-			}
-		}
+            }
+
+            if (ForgeClassFieldValue.IsCompressable(FieldType))
+            {
+                changingRect.x = rect.x;
+                changingRect.y += EditorGUIUtility.singleLineHeight * 2;
+                changingRect.width = 100;
+
+                compress = EditorGUI.ToggleLeft(changingRect, "  Compress", compress);
+
+                if (compress)
+                {
+
+                }
+            }
+        }
 	}
 }
