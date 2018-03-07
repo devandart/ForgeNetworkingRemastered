@@ -16,6 +16,11 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 		public float InterpolateValue;
 		public ForgeAcceptableFieldTypes FieldType;
 
+        public bool compress = false;
+        public int compressionMin = 0;
+        public int compressionMax = 1024;
+        public float compressionAccuracy = 0.01f;
+
 		public ForgeEditorField(string name = "", bool canRender = true, ForgeAcceptableFieldTypes type = ForgeAcceptableFieldTypes.BYTE, bool interpolate = false, float interpolateValue = 0f)
 		{
 			this.FieldName = name;
@@ -58,6 +63,16 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 					//InterpolateValue = ForgeNetworkingEditor.DEFAULT_INTERPOLATE_TIME;
 				}
 			}
+
+            if (ForgeClassFieldValue.IsCompressable(FieldType))
+            {
+                compress = GUILayout.Toggle(compress, "compress", GUILayout.Width(125));
+
+                if (compress)
+                {
+
+                }
+            }
 		}
 
 		public void Render(Rect rect, bool isActive, bool isFocused)

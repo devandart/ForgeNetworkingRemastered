@@ -17,6 +17,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 		public bool Interpolate;
 		public float InterpolateValue;
 		public ForgeAcceptableFieldTypes FieldType;
+        public ForgeCompressionSettings compressionSettings;
 		public bool IsNetworkedObject { get { return FieldName.ToLower() == "networkobject"; } }
 
 		public ForgeClassFieldValue()
@@ -26,6 +27,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 			Interpolate = false;
 			InterpolateValue = 0;
 			FieldType = ForgeAcceptableFieldTypes.BYTE;
+            compressionSettings = new ForgeCompressionSettings();
 		}
 
 		public ForgeClassFieldValue(string name, object value, ForgeAcceptableFieldTypes type, bool interpolate, float interpolateValue)
@@ -35,6 +37,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 			this.FieldType = type;
 			this.Interpolate = interpolate;
 			this.InterpolateValue = interpolateValue;
+            this.compressionSettings = compressionSettings;
 		}
 
 		public static ForgeClassFieldValue GetClassField(FieldInfo field, Type t, bool interpolate, float interpolateValue)
@@ -90,7 +93,27 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 			return new ForgeClassFieldValue(name, value, type, interpolate, interpolateValue);
 		}
 
-		public static Type GetTypeFromAcceptable(ForgeAcceptableFieldTypes type)
+        internal static bool IsCompressable(ForgeAcceptableFieldTypes fieldType)
+        {
+            bool returnValue = false;
+
+            switch (fieldType)
+            {
+                case ForgeAcceptableFieldTypes.FLOAT:
+                case ForgeAcceptableFieldTypes.VECTOR2:
+                case ForgeAcceptableFieldTypes.VECTOR3:
+                case ForgeAcceptableFieldTypes.VECTOR4:
+                case ForgeAcceptableFieldTypes.QUATERNION:
+                case ForgeAcceptableFieldTypes.DOUBLE:
+                case ForgeAcceptableFieldTypes.LONG:
+                    returnValue = true;
+                    break;
+            }
+
+            return returnValue;
+        }
+
+        public static Type GetTypeFromAcceptable(ForgeAcceptableFieldTypes type)
 		{
 			switch (type)
 			{
