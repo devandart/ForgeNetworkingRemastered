@@ -93,6 +93,35 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 			return new ForgeClassFieldValue(name, value, type, interpolate, interpolateValue);
 		}
 
+        public static int GetCompressionFieldCount(ForgeAcceptableFieldTypes fieldType)
+        {
+            UInt16 count = 0;
+
+            switch (fieldType)
+            {
+                case ForgeAcceptableFieldTypes.DOUBLE:
+                case ForgeAcceptableFieldTypes.FLOAT:
+                case ForgeAcceptableFieldTypes.LONG:
+                    count = 1;
+                    break;
+                case ForgeAcceptableFieldTypes.VECTOR2:
+                    count = 2;
+                    break;
+                case ForgeAcceptableFieldTypes.VECTOR3:
+                    count = 3;
+                    break;
+                case ForgeAcceptableFieldTypes.QUATERNION:
+                case ForgeAcceptableFieldTypes.VECTOR4:
+                    count = 4;
+                    break;
+                default:
+                    count = 0;
+                    break;
+            }
+
+            return count;
+        }
+
         internal static bool IsCompressable(ForgeAcceptableFieldTypes fieldType)
         {
             bool returnValue = false;
