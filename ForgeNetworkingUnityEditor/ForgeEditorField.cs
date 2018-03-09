@@ -12,6 +12,7 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
 	{
 		public string FieldName;
 		public bool CanRender = true;
+        public bool showCompressionSettings = false;
 		public bool Interpolate;
 		public float InterpolateValue;
 		public ForgeAcceptableFieldTypes FieldType;
@@ -27,10 +28,17 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
         {
             get
             {
-                var height = EditorGUIUtility.singleLineHeight + 2;
+                var height = EditorGUIUtility.singleLineHeight + 5;
                 if (IsCompressable)
-                {
-                    height *= compressionSettings.Length + 2;
+                { 
+                    if (showCompressionSettings)
+                    {
+                        height *= compressionSettings.Length + 2;
+                    }
+                    else
+                    {
+                        height *= 2;
+                    }
                 }
                 return  height;
             }
@@ -115,9 +123,17 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
                 else
                     InterpolateValue = 0;
             }
-
+            
             if (IsCompressable)
             {
+                changingRect = new Rect(rect.x, rect.y + EditorGUIUtility.singleLineHeight, rect.width, EditorGUIUtility.singleLineHeight);
+                showCompressionSettings = EditorGUI.ToggleLeft(changingRect, "Show Compression Settings", showCompressionSettings);
+
+                if (!showCompressionSettings)
+                {
+                    return;
+                }
+
                 for (int i = 0; i < compressionSettings.Length; i++)
                 {
                     var cs = compressionSettings[i];
@@ -136,14 +152,11 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
                             case 2:
                                 toggleText += " Z";
                                 break;
-                            case 3:
-                                toggleText += " W";
-                                break;
                         }
                     }
 
                     changingRect.x = rect.x;
-                    changingRect.width = rect.width * 0.1f;
+                    changingRect.width = rect.width * 0.15f;
                     changingRect.y += EditorGUIUtility.singleLineHeight + 2;
                     
                     cs.compress = EditorGUI.ToggleLeft(changingRect, toggleText, cs.compress);
@@ -159,28 +172,28 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
                     }
 
                     changingRect.x += changingRect.width;
-                    changingRect.width = rect.width * 0.035f;
+                    changingRect.width = rect.width * 0.05f;
                     EditorGUI.LabelField(changingRect, "  Min");
                     changingRect.x += changingRect.width;
                     changingRect.width = rect.width * 0.075f;
                     cs.min = EditorGUI.IntField(changingRect, cs.min);
 
                     changingRect.x += changingRect.width;
-                    changingRect.width = rect.width * 0.035f;
+                    changingRect.width = rect.width * 0.05f;
                     EditorGUI.LabelField(changingRect, "  Max");
                     changingRect.x += changingRect.width;
                     changingRect.width = rect.width * 0.075f;
                     cs.max = EditorGUI.IntField(changingRect, cs.max);
 
                     changingRect.x += changingRect.width;
-                    changingRect.width = rect.width * 0.06f;
+                    changingRect.width = rect.width * 0.08f;
                     EditorGUI.LabelField(changingRect, "  Accuracy");
                     changingRect.x += changingRect.width;
                     changingRect.width = rect.width * 0.075f;
                     cs.accuracy = EditorGUI.FloatField(changingRect, cs.accuracy);
 
                     changingRect.x += changingRect.width;
-                    changingRect.width = rect.width * 0.2f;
+                    changingRect.width = rect.width * 0.35f;
                     EditorGUI.LabelField(changingRect, string.Format("  Used Bits: 16 (dummy value)"));
                 }
             }

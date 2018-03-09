@@ -108,11 +108,9 @@ namespace BeardedManStudios.Forge.Networking.UnityEditor
                     count = 2;
                     break;
                 case ForgeAcceptableFieldTypes.VECTOR3:
-                    count = 3;
-                    break;
-                case ForgeAcceptableFieldTypes.QUATERNION:
                 case ForgeAcceptableFieldTypes.VECTOR4:
-                    count = 4;
+                case ForgeAcceptableFieldTypes.QUATERNION:
+                    count = 3;
                     break;
                 default:
                     count = 0;
