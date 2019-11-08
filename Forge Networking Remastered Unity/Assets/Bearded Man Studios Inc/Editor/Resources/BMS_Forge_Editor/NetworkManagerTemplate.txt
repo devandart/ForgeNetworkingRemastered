@@ -8,18 +8,18 @@ namespace BeardedManStudios.Forge.Networking.Unity
 	{
 		public delegate void InstantiateEvent(INetworkBehavior unityGameObject, NetworkObject obj);
 		public event InstantiateEvent objectInitialized;
-		private BMSByte metadata = new BMSByte();
+		protected BMSByte metadata = new BMSByte();
 
 		>:FOREACH networkObjects:<
 		public GameObject[] >:[i]:<NetworkObject = null;
 		>:ENDFOREACH:<
 
-		private void SetupObjectCreatedEvent()
+		protected virtual void SetupObjectCreatedEvent()
 		{
 			Networker.objectCreated += CaptureObjects;
 		}
 
-		private void OnDestroy()
+		protected virtual void OnDestroy()
 		{
 		    if (Networker != null)
 				Networker.objectCreated -= CaptureObjects;
@@ -41,7 +41,7 @@ namespace BeardedManStudios.Forge.Networking.Unity
 						if (>:[i]:<NetworkObject.Length > 0 && >:[i]:<NetworkObject[obj.CreateCode] != null)
 						{
 							var go = Instantiate(>:[i]:<NetworkObject[obj.CreateCode]);
-							newObj = go.GetComponent<NetworkBehavior>();
+							newObj = go.GetComponent<>:[i]:<Behavior>();
 						}
 					}
 
@@ -57,7 +57,7 @@ namespace BeardedManStudios.Forge.Networking.Unity
 			>:ENDFOREACH:<
 		}
 
-		private void InitializedObject(INetworkBehavior behavior, NetworkObject obj)
+		protected virtual void InitializedObject(INetworkBehavior behavior, NetworkObject obj)
 		{
 			if (objectInitialized != null)
 				objectInitialized(behavior, obj);
@@ -81,8 +81,24 @@ namespace BeardedManStudios.Forge.Networking.Unity
 		>:ENDFOREACH:<
 
 		>:FOREACH networkObjects:<
+		/// <summary>
+		/// Instantiate an instance of >:[i]:<
+		/// </summary>
+		/// <returns>
+		/// A local instance of >:[i]:<Behavior
+		/// </returns>
+		/// <param name="index">The index of the >:[i]:< prefab in the NetworkManager to Instantiate</param>
+		/// <param name="position">Optional parameter which defines the position of the created GameObject</param>
+		/// <param name="rotation">Optional parameter which defines the rotation of the created GameObject</param>
+		/// <param name="sendTransform">Optional Parameter to send transform data to other connected clients on Instantiation</param>
 		public >:[i]:<Behavior Instantiate>:[i]:<(int index = 0, Vector3? position = null, Quaternion? rotation = null, bool sendTransform = true)
 		{
+			if (>:[i]:<NetworkObject.Length <= index)
+			{
+				Debug.Log("Prefab(s) missing for: >:[i]:<. Add them at the NetworkManager prefab.");
+				return null;
+			}
+			
 			var go = Instantiate(>:[i]:<NetworkObject[index]);
 			var netBehavior = go.GetComponent<>:[i]:<Behavior>();
 
@@ -95,7 +111,6 @@ namespace BeardedManStudios.Forge.Networking.Unity
 
 				if (position == null && rotation == null)
 				{
-					metadata.Clear();
 					byte transformFlags = 0x1 | 0x2;
 					ObjectMapper.Instance.MapBytes(metadata, transformFlags);
 					ObjectMapper.Instance.MapBytes(metadata, go.transform.position, go.transform.rotation);

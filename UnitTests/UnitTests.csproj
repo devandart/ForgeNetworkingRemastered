@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>UnitTests</RootNamespace>
     <AssemblyName>UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -96,10 +96,6 @@
     <ProjectReference Include="..\ForgeNetworkingCommon\ForgeNetworkingCommon.csproj">
       <Project>{9c3af9d0-b19f-44a6-9068-84b636892bde}</Project>
       <Name>ForgeNetworkingCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ForgeNetworkingUnityEditor\ForgeNetworkingUnityEditor.csproj">
-      <Project>{6BDD215D-6E48-4D61-9C44-A3188EC18DF1}</Project>
-      <Name>ForgeNetworkingUnityEditor</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -30,50 +30,52 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			networkObject.RegisterRpc("DestroyPrimitive", DestroyPrimitive, typeof(Vector3));
 			networkObject.RegisterRpc("TestMe", TestMe, typeof(string));
 
+			networkObject.onDestroy += DestroyGameObject;
+
+			if (!obj.IsOwner)
+			{
+				if (!skipAttachIds.ContainsKey(obj.NetworkId)){
+					uint newId = obj.NetworkId + 1;
+					ProcessOthers(gameObject.transform, ref newId);
+				}
+				else
+					skipAttachIds.Remove(obj.NetworkId);
+			}
+
+			if (obj.Metadata != null)
+			{
+				byte transformFlags = obj.Metadata[0];
+
+				if (transformFlags != 0)
+				{
+					BMSByte metadataTransform = new BMSByte();
+					metadataTransform.Clone(obj.Metadata);
+					metadataTransform.MoveStartIndex(1);
+
+					if ((transformFlags & 0x01) != 0 && (transformFlags & 0x02) != 0)
+					{
+						MainThreadManager.Run(() =>
+						{
+							transform.position = ObjectMapper.Instance.Map<Vector3>(metadataTransform);
+							transform.rotation = ObjectMapper.Instance.Map<Quaternion>(metadataTransform);
+						});
+					}
+					else if ((transformFlags & 0x01) != 0)
+					{
+						MainThreadManager.Run(() => { transform.position = ObjectMapper.Instance.Map<Vector3>(metadataTransform); });
+					}
+					else if ((transformFlags & 0x02) != 0)
+					{
+						MainThreadManager.Run(() => { transform.rotation = ObjectMapper.Instance.Map<Quaternion>(metadataTransform); });
+					}
+				}
+			}
+
 			MainThreadManager.Run(() =>
 			{
 				NetworkStart();
 				networkObject.Networker.FlushCreateActions(networkObject);
 			});
-
-			networkObject.onDestroy += DestroyGameObject;
-
-			if (!obj.IsOwner)
-			{
-				if (!skipAttachIds.ContainsKey(obj.NetworkId))
-					ProcessOthers(gameObject.transform, obj.NetworkId + 1);
-				else
-					skipAttachIds.Remove(obj.NetworkId);
-			}
-
-			if (obj.Metadata == null)
-				return;
-
-			byte transformFlags = obj.Metadata[0];
-
-			if (transformFlags == 0)
-				return;
-
-			BMSByte metadataTransform = new BMSByte();
-			metadataTransform.Clone(obj.Metadata);
-			metadataTransform.MoveStartIndex(1);
-
-			if ((transformFlags & 0x01) != 0 && (transformFlags & 0x02) != 0)
-			{
-				MainThreadManager.Run(() =>
-				{
-					transform.position = ObjectMapper.Instance.Map<Vector3>(metadataTransform);
-					transform.rotation = ObjectMapper.Instance.Map<Quaternion>(metadataTransform);
-				});
-			}
-			else if ((transformFlags & 0x01) != 0)
-			{
-				MainThreadManager.Run(() => { transform.position = ObjectMapper.Instance.Map<Vector3>(metadataTransform); });
-			}
-			else if ((transformFlags & 0x02) != 0)
-			{
-				MainThreadManager.Run(() => { transform.rotation = ObjectMapper.Instance.Map<Quaternion>(metadataTransform); });
-			}
 		}
 
 		protected override void CompleteRegistration()
